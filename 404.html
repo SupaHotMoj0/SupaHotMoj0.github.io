@@ -1,47 +1,334 @@
-<!doctype html>
+from pathlib import Path
+
+html = r'''<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#050810"><meta name="robots" content="noindex,follow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#040610">
+<meta name="description" content="404 — a lost signal in the SUPAHOTBAMI digital universe.">
+<meta name="robots" content="noindex,follow">
 <title>404 // SIGNAL LOST — SUPAHOTBAMI</title>
 <style>
-:root{color-scheme:dark;--bg:#050810;--text:#e8effa;--muted:#a2b0c5;--cyan:#69efff;--green:#92ffbe;--purple:#bba0ff;--line:#273448;--mono:ui-monospace,SFMono-Regular,Consolas,monospace;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;isolation:isolate;overflow:hidden;display:grid;place-items:center}a{color:inherit;text-decoration:none}a:hover{color:var(--green)}a:focus-visible{outline:2px solid var(--green);outline-offset:5px}
-#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-3;pointer-events:none}.aurora{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 82% 18%,#7739c32b,transparent 45%),radial-gradient(ellipse at 12% 50%,#00cccc18,transparent 45%)}.scanlines{position:fixed;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(transparent 0 4px,#ffffff03 4px 5px)}
-.wrap{width:min(900px,calc(100% - 40px));margin-inline:auto}header{position:fixed;top:0;left:0;right:0;border-bottom:1px solid var(--line);background:#050810e8;backdrop-filter:blur(16px)}.nav{min-height:76px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{font:700 12px var(--mono);letter-spacing:.08em}.brand span{color:var(--green)}.nav-note{font:10px var(--mono);color:var(--muted);letter-spacing:.12em}
-main{padding:120px 0 70px;text-align:center}.eyebrow{font:11px/1.7 var(--mono);letter-spacing:.15em;color:var(--green);margin:0 0 22px}.error-code{font:850 clamp(100px,25vw,230px)/.9 var(--mono);letter-spacing:-.12em;margin:0;background:linear-gradient(110deg,var(--cyan),var(--purple));background-clip:text;-webkit-background-clip:text;color:transparent;filter:drop-shadow(0 0 30px #69efff2b)}h1{font-size:clamp(25px,5vw,42px);letter-spacing:-.05em;margin:25px 0 12px}.lead{font:clamp(12px,2vw,14px)/1.9 var(--mono);color:var(--cyan);letter-spacing:.06em}.copy{max-width:530px;margin:18px auto 0;color:var(--muted);font-size:14px;line-height:1.9}
-.terminal{max-width:570px;margin:34px auto 0;text-align:left;border:1px solid #69efff44;border-radius:9px;background:#070e1ce8;box-shadow:0 25px 100px #0008,0 0 60px #69efff08;overflow:hidden;font:11px/1.9 var(--mono)}.termbar{padding:11px 16px;color:var(--muted);border-bottom:1px solid var(--line);font-size:10px}.dots{letter-spacing:3px;color:var(--purple);margin-right:12px}.terminal-body{padding:17px 20px;color:var(--muted)}.terminal-body p{margin:5px 0}.prompt{color:var(--green);padding-right:8px}.cyan{color:var(--cyan)}.green{color:var(--green)}
-.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:30px}.btn{display:inline-flex;align-items:center;gap:24px;background:var(--green);color:#08140e;border:1px solid var(--green);padding:14px 19px;border-radius:5px;font:600 11px var(--mono);transition:transform .2s,box-shadow .2s}.btn:hover{color:#08140e;transform:translateY(-3px);box-shadow:0 0 30px #92ffbe2b}.btn.ghost{color:var(--cyan);border-color:#69efff50;background:#69efff08}.btn.ghost:hover{color:var(--cyan)}
-footer{position:fixed;bottom:0;left:0;right:0;padding:20px 0;border-top:1px solid var(--line);font:9px/1.8 var(--mono);color:var(--muted)}.foot{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.foot span:last-child{color:var(--green)}.cursor{animation:blink 1.2s steps(2) infinite}@keyframes blink{50%{opacity:0}}
-@media(max-width:600px){.wrap{width:calc(100% - 32px)}.nav{min-height:66px}.nav-note{font-size:8px}main{padding-top:105px}.copy{font-size:13px}.terminal{margin-top:26px}footer{font-size:8px}.foot{justify-content:center;text-align:center}}
-@media(max-height:720px){body{overflow:auto}main{padding-top:100px;padding-bottom:90px}footer{position:relative}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+:root{
+  color-scheme:dark;--bg:#040610;--panel:rgba(7,13,27,.88);--text:#eaf4ff;
+  --muted:#91a2b8;--cyan:#65edff;--green:#8bffbd;--purple:#b28aff;
+  --pink:#ff70d2;--gold:#ffe08a;--line:rgba(115,213,255,.2);
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{min-height:100%;background:var(--bg);scroll-behavior:smooth}
+body{margin:0;min-height:100vh;overflow-x:hidden;isolation:isolate;color:var(--text);background:
+ radial-gradient(ellipse at 50% 48%,rgba(28,29,75,.16),transparent 56%),var(--bg)}
+a{color:inherit;text-decoration:none}
+button,input{font:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--green);outline-offset:4px}
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:-5;pointer-events:none}
+.aurora{position:fixed;inset:-20%;z-index:-4;pointer-events:none;opacity:.8;
+ background:radial-gradient(ellipse at 20% 30%,rgba(117,47,199,.18),transparent 34%),
+ radial-gradient(ellipse at 80% 58%,rgba(0,207,224,.13),transparent 34%),
+ radial-gradient(ellipse at 55% 90%,rgba(42,255,151,.08),transparent 32%);
+ filter:blur(35px);animation:aurora 24s ease-in-out infinite alternate}
+@keyframes aurora{0%{transform:translate3d(-2%,1%,0) scale(1)}100%{transform:translate3d(3%,-2%,0) scale(1.12)}}
+.scanlines{position:fixed;inset:0;z-index:8;pointer-events:none;opacity:.11;
+ background:repeating-linear-gradient(to bottom,transparent 0 3px,rgba(255,255,255,.075) 4px)}
+.vignette{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse,transparent 35%,rgba(0,0,0,.52) 100%)}
+.wrap{width:min(1040px,calc(100% - 38px));margin-inline:auto}
+header{position:fixed;inset:0 0 auto;z-index:10;border-bottom:1px solid rgba(255,255,255,.07);
+ background:rgba(4,6,16,.67);backdrop-filter:blur(18px)}
+.nav{height:70px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{font:700 12px var(--mono);letter-spacing:.12em;text-shadow:0 0 18px rgba(101,237,255,.24)}
+.brand b{color:var(--green)}
+.navright{display:flex;align-items:center;gap:22px;color:var(--muted);font:9px var(--mono);letter-spacing:.13em}
+.live{color:var(--green)}.live:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--green);margin:0 8px 1px 0;box-shadow:0 0 12px var(--green);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.35;box-shadow:0 0 2px var(--green)}}
+main{min-height:100vh;display:grid;place-items:center;padding:112px 0 94px;text-align:center}
+.content{width:100%;position:relative}
+.eyebrow{font:10px/1.8 var(--mono);letter-spacing:.22em;color:var(--green);text-transform:uppercase}
+.signal{position:relative;width:min(570px,90vw);margin:0 auto}
+.signal:before,.signal:after{content:"";position:absolute;left:50%;top:49%;width:120%;height:1px;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,rgba(101,237,255,.28),transparent);z-index:-1}
+.signal:after{width:88%;transform:translate(-50%,-50%) rotate(90deg);opacity:.35}
+.error{font:900 clamp(112px,25vw,240px)/.9 var(--mono);letter-spacing:-.13em;margin:14px 0 8px;padding-right:.12em;
+ color:transparent;background:linear-gradient(110deg,#d6ffff 4%,var(--cyan) 34%,var(--purple) 69%,var(--pink));
+ background-clip:text;-webkit-background-clip:text;filter:drop-shadow(0 0 18px rgba(101,237,255,.24));animation:float 6s ease-in-out infinite,glitch 9s infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes glitch{0%,93%,96%,100%{text-shadow:none}94%{text-shadow:4px 0 var(--pink),-4px 0 var(--cyan);transform:translateX(2px)}95%{text-shadow:-3px 0 var(--pink),3px 0 var(--cyan);transform:translateX(-2px)}}
+.orbit{position:absolute;left:50%;top:49%;width:min(470px,78vw);aspect-ratio:1;border:1px solid rgba(101,237,255,.13);border-radius:50%;transform:translate(-50%,-50%) rotate(-24deg);pointer-events:none;animation:orbit 32s linear infinite}
+.orbit:before{content:"";position:absolute;inset:12%;border:1px dashed rgba(178,138,255,.18);border-radius:50%}
+.orbit:after{content:"";position:absolute;width:7px;height:7px;border-radius:50%;background:var(--green);top:12%;left:18%;box-shadow:0 0 15px 4px rgba(139,255,189,.45)}
+@keyframes orbit{to{transform:translate(-50%,-50%) rotate(336deg)}}
+h1{font-size:clamp(24px,4vw,38px);letter-spacing:-.055em;margin:25px 0 10px}
+.lead{font:clamp(10px,1.7vw,12px)/2 var(--mono);letter-spacing:.12em;color:var(--cyan)}
+.copy{max-width:550px;margin:14px auto 0;color:var(--muted);font-size:13px;line-height:1.9}
+.statusline{display:flex;align-items:center;justify-content:center;gap:10px;margin:20px 0 0;color:#70839a;font:9px var(--mono);letter-spacing:.1em}
+.statusline:before,.statusline:after{content:"";width:35px;height:1px;background:linear-gradient(90deg,transparent,var(--purple))}
+.statusline:after{transform:rotate(180deg)}
+.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:27px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:45px;padding:0 18px;border:1px solid rgba(139,255,189,.56);border-radius:4px;
+ color:var(--green);background:rgba(139,255,189,.07);font:10px var(--mono);letter-spacing:.08em;transition:transform .25s,box-shadow .25s,background .25s}
+.btn:hover{transform:translateY(-3px);background:var(--green);color:#04110a;box-shadow:0 0 28px rgba(139,255,189,.3)}
+.btn.ghost{border-color:rgba(101,237,255,.35);color:var(--cyan);background:rgba(101,237,255,.045)}
+.btn.ghost:hover{background:var(--cyan);color:#041016;box-shadow:0 0 28px rgba(101,237,255,.25)}
+footer{position:fixed;z-index:9;inset:auto 0 0;border-top:1px solid rgba(255,255,255,.06);background:rgba(4,6,16,.58);backdrop-filter:blur(12px);padding:15px 0}
+.foot{display:flex;align-items:center;justify-content:space-between;gap:15px;color:#718197;font:9px var(--mono);letter-spacing:.08em}
+.foot strong{color:var(--green);font-weight:400}
+.easter-trigger{position:fixed;z-index:12;right:15px;bottom:14px;width:24px;height:24px;border:1px solid rgba(139,255,189,.08);border-radius:50%;background:rgba(139,255,189,.015);color:rgba(139,255,189,.13);cursor:pointer;font:12px var(--mono);transition:.3s}
+.easter-trigger:hover,.easter-trigger:focus-visible{color:var(--green);border-color:rgba(139,255,189,.65);box-shadow:0 0 18px rgba(139,255,189,.2);transform:rotate(45deg)}
+/* Secret access overlay */
+.overlay{position:fixed;inset:0;z-index:30;display:none;place-items:center;padding:20px;background:rgba(1,3,10,.83);backdrop-filter:blur(18px);opacity:0;transition:opacity .35s}
+.overlay.show{display:grid;opacity:1}
+.authbox,.terminalbox{width:min(540px,100%);border:1px solid rgba(101,237,255,.35);border-radius:8px;background:linear-gradient(145deg,rgba(10,19,37,.98),rgba(5,9,19,.98));box-shadow:0 0 70px rgba(101,237,255,.12),0 30px 100px #000a;overflow:hidden;animation:rise .35s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(15px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.boxbar{height:42px;padding:0 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,.08);color:#91a2b8;font:9px var(--mono);letter-spacing:.1em}
+.windowdots{color:var(--pink);letter-spacing:4px}.close{border:0;background:none;color:#8798ac;cursor:pointer;font-size:18px}
+.boxbody{padding:25px}
+.auth-title{font:700 15px var(--mono);color:var(--cyan);letter-spacing:.07em}
+.auth-copy{font:10px/1.8 var(--mono);color:var(--muted);margin:10px 0 20px}
+.field{display:block;margin:13px 0 5px;text-align:left;color:var(--green);font:9px var(--mono);letter-spacing:.12em}
+.auth-input{width:100%;height:43px;padding:0 12px;border:1px solid rgba(101,237,255,.22);border-radius:3px;background:#030814;color:var(--text);font:12px var(--mono);outline:none}
+.auth-input:focus{border-color:var(--cyan);box-shadow:0 0 15px rgba(101,237,255,.1)}
+.auth-submit{width:100%;margin-top:18px;min-height:43px;border:1px solid rgba(139,255,189,.55);border-radius:3px;background:rgba(139,255,189,.09);color:var(--green);font:10px var(--mono);letter-spacing:.1em;cursor:pointer;transition:.2s}
+.auth-submit:hover{background:var(--green);color:#04110a;box-shadow:0 0 25px rgba(139,255,189,.25)}
+.auth-error{min-height:18px;margin:12px 0 0;color:var(--pink);font:10px var(--mono)}
+.terminalbox{width:min(760px,100%);height:min(570px,85vh);display:flex;flex-direction:column}
+.terminalbox .boxbar{flex-shrink:0}
+.terminal-screen{padding:18px 20px;overflow:auto;flex:1;text-align:left;font:11px/1.8 var(--mono);color:#b7c6d8;scrollbar-color:#31506a #08101d;scrollbar-width:thin}
+.term-line{white-space:pre-wrap;overflow-wrap:anywhere;min-height:1.8em}
+.term-green{color:var(--green)}.term-cyan{color:var(--cyan)}.term-purple{color:var(--purple)}.term-pink{color:var(--pink)}.term-gold{color:var(--gold)}.term-muted{color:#75869b}
+.term-inputrow{display:flex;align-items:center;gap:9px;padding:13px 18px;border-top:1px solid rgba(255,255,255,.08);background:rgba(0,0,0,.16)}
+.term-prompt{color:var(--green);font:11px var(--mono);white-space:nowrap}
+#command-input{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--cyan);font:11px var(--mono);caret-color:var(--green)}
+#command-input::placeholder{color:#56677d}
+.typing-cursor{display:inline-block;width:6px;height:12px;background:var(--green);vertical-align:-2px;animation:blink .8s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+@media(max-width:650px){.wrap{width:calc(100% - 30px)}.nav{height:62px}.navright{font-size:8px}.navright .live{display:none}main{padding:95px 0 85px}.copy{font-size:12px}.orbit{width:85vw}.foot{font-size:8px}.terminal-screen{font-size:10px}.boxbody{padding:20px}}
+@media(max-height:720px){main{padding-top:85px;padding-bottom:90px}footer{position:relative}.easter-trigger{bottom:12px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
-<canvas id="stars" aria-hidden="true"></canvas><div class="aurora" aria-hidden="true"></div><div class="scanlines" aria-hidden="true"></div>
-<header><div class="wrap nav"><a class="brand" href="/">SB<span>://</span> SUPAHOTBAMI</a><span class="nav-note">OBSERVATORY / ROUTE ERROR</span></div></header>
-<main class="wrap">
-<p class="eyebrow">SIGNAL LOST / SECTOR NOT FOUND</p>
-<p class="error-code" aria-label="Error 404">404</p>
-<h1>This signal went off-grid<span style="color:var(--green)">.</span></h1>
-<div class="lead">THE REQUESTED RESOURCE IS NOT IN THIS SECTOR.</div>
-<p class="copy">The page you're looking for may have moved, been renamed, or never existed in this corner of the internet. Nothing is broken on your end — let's get you back on course.</p>
-<div class="terminal" role="status" aria-label="Terminal diagnostic"><div class="termbar"><span class="dots" aria-hidden="true">● ● ●</span> routing-daemon@supahotbami: ~</div><div class="terminal-body">
-<p><span class="prompt">❯</span> trace --requested-route</p><p>Resolving destination<span class="cyan">...</span></p><p class="green">ERR_ROUTE_NOT_FOUND // HTTP 404</p><p><span class="prompt">❯</span> recover --safe-route</p><p class="green">Home sector available. Awaiting input<span class="cursor">▍</span></p>
-</div></div>
-<div class="actions"><a class="btn" href="/">Return to base <span aria-hidden="true">↗</span></a><a class="btn ghost" href="https://github.com/SupaHotMoj0?tab=repositories" target="_blank" rel="noopener noreferrer">Browse repositories ↗</a></div>
-</main>
-<footer><div class="wrap foot"><span>© <span id="year"></span> SUPAHOTBAMI</span><span>STATIC SITE / SIGNAL STILL STRONG ✦</span></div></footer>
+<canvas id="space" aria-hidden="true"></canvas><div class="aurora"></div><div class="vignette"></div><div class="scanlines"></div>
+<header><div class="wrap nav">
+  <a class="brand" href="/">SUPAHOTBAMI<b>://</b> OBSERVATORY</a>
+  <div class="navright"><span>SECTOR 404</span><span class="live">SIGNAL ONLINE</span></div>
+</div></header>
+
+<main><div class="wrap content">
+  <div class="eyebrow">✦ SIGNAL LOST / SECTOR NOT FOUND ✦</div>
+  <div class="signal"><div class="orbit"></div><div class="error" aria-label="Error 404">404</div></div>
+  <h1>This signal went off-grid<span style="color:var(--green)">.</span></h1>
+  <div class="lead">THE REQUESTED RESOURCE IS NOT IN THIS SECTOR.</div>
+  <p class="copy">The page you're looking for may have moved, been renamed, or never existed in this corner of the internet. The universe is still intact. Let's get you back on course.</p>
+  <div class="statusline">ROUTE TRACE COMPLETE // SAFE RETURN AVAILABLE</div>
+  <div class="actions">
+    <a class="btn" href="/">RETURN TO BASE <span>↗</span></a>
+    <a class="btn ghost" href="https://github.com/SupaHotMoj0?tab=repositories" target="_blank" rel="noopener noreferrer">EXPLORE REPOSITORIES ↗</a>
+  </div>
+</div></main>
+
+<footer><div class="wrap foot"><span>© <span id="year"></span> SUPAHOTBAMI</span><span>READ THE SOURCE. <strong>QUESTION THE DEFAULTS.</strong></span></div></footer>
+<button class="easter-trigger" id="egg-trigger" type="button" aria-label="Hidden system access" title="">✧</button>
+
+<div class="overlay" id="auth-overlay" role="dialog" aria-modal="true" aria-labelledby="auth-heading">
+  <div class="authbox">
+    <div class="boxbar"><span><span class="windowdots">● ● ●</span> RESTRICTED ACCESS / AUTH GATE</span><button class="close" data-close aria-label="Close">×</button></div>
+    <div class="boxbody">
+      <div class="auth-title" id="auth-heading">IDENTITY VERIFICATION REQUIRED</div>
+      <p class="auth-copy">Unregistered operator detected. Provide your clearance credentials to access the hidden shell.</p>
+      <form id="auth-form" autocomplete="off">
+        <label class="field" for="agent-user">AGENT IDENTIFIER</label>
+        <input class="auth-input" id="agent-user" name="username" type="text" spellcheck="false" autocapitalize="off" required>
+        <label class="field" for="agent-pass">ACCESS PHRASE</label>
+        <input class="auth-input" id="agent-pass" name="password" type="password" required>
+        <button class="auth-submit" type="submit">AUTHENTICATE / REQUEST SHELL</button>
+        <p class="auth-error" id="auth-error" aria-live="polite"></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="terminal-overlay" role="dialog" aria-modal="true" aria-labelledby="terminal-heading">
+  <div class="terminalbox">
+    <div class="boxbar"><span id="terminal-heading"><span class="windowdots">● ● ●</span> operator@supahotbami: ~</span><button class="close" id="terminal-close" aria-label="Close terminal">×</button></div>
+    <div class="terminal-screen" id="terminal-output" role="log" aria-live="polite"></div>
+    <form class="term-inputrow" id="command-form">
+      <span class="term-prompt">operator@supahotbami:~ ❯</span>
+      <input id="command-input" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type 'help' to list commands" aria-label="Terminal command">
+    </form>
+  </div>
+</div>
+
 <script>
-'use strict';
-document.getElementById('year').textContent=new Date().getFullYear();
-const canvas=document.getElementById('stars'),ctx=canvas.getContext('2d'),reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
-let width=0,height=0,stars=[],frame=0,last=0;
-function resize(){const dpr=Math.min(devicePixelRatio||1,2);width=innerWidth;height=innerHeight;canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);stars=Array.from({length:Math.min(170,Math.max(30,Math.round(width*height/7500)))},()=>({x:Math.random()*width,y:Math.random()*height,r:.3+Math.random()*1.2,speed:3+Math.random()*10,alpha:.25+Math.random()*.6,phase:Math.random()*6.28}));paint(0,0)}
-function paint(time,dt){ctx.clearRect(0,0,width,height);for(const s of stars){s.y=(s.y+s.speed*dt)%(height+3);const alpha=s.alpha*(.75+Math.sin(time*.0007+s.phase)*.2);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(190,226,255,${alpha})`;ctx.fill()}}
-function loop(t){frame=0;if(reduceMotion||document.hidden)return;const dt=last?Math.min((t-last)/1000,.05):0;last=t;paint(t,dt);frame=requestAnimationFrame(loop)}
-function start(){cancelAnimationFrame(frame);frame=0;last=0;if(!reduceMotion&&!document.hidden)frame=requestAnimationFrame(loop)}
-addEventListener('resize',resize);document.addEventListener('visibilitychange',start);resize();start();
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  $('year').textContent = new Date().getFullYear();
+
+  // Ambient starfield: layered depth, twinkle, drifting stars and occasional shooting stars.
+  const canvas = $('space'), ctx = canvas.getContext('2d');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let width=0,height=0,stars=[],shooters=[],raf=0,last=0,elapsed=0;
+  function resize(){
+    const dpr=Math.min(devicePixelRatio||1,2);width=innerWidth;height=innerHeight;
+    canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    stars=Array.from({length:Math.min(240,Math.max(65,Math.round(width*height/4300)))},()=>({
+      x:Math.random()*width,y:Math.random()*height,r:.25+Math.random()*1.25,
+      speed:2+Math.random()*11,alpha:.18+Math.random()*.68,phase:Math.random()*6.28,
+      hue:Math.random()<.18?185:Math.random()<.5?155:255
+    }));
+  }
+  function shoot(){
+    if(shooters.length<2 && Math.random()<.012)shooters.push({x:Math.random()*width*.9,y:Math.random()*height*.55,
+      vx:350+Math.random()*300,vy:130+Math.random()*130,life:0,max:.8+Math.random()*.65});
+  }
+  function paint(t,dt){
+    ctx.clearRect(0,0,width,height);
+    for(const s of stars){
+      s.y+=s.speed*dt;if(s.y>height+2){s.y=-2;s.x=Math.random()*width}
+      const a=s.alpha*(.62+.38*Math.sin(t*.001+s.phase));
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      ctx.fillStyle=`hsla(${s.hue},95%,83%,${a})`;ctx.fill();
+    }
+    shoot();
+    shooters=shooters.filter(s=>s.life<s.max);
+    for(const s of shooters){
+      s.life+=dt;s.x+=s.vx*dt;s.y+=s.vy*dt;
+      const k=1-s.life/s.max;
+      const g=ctx.createLinearGradient(s.x-s.vx*.16,s.y-s.vy*.16,s.x,s.y);
+      g.addColorStop(0,'rgba(101,237,255,0)');g.addColorStop(1,`rgba(210,255,255,${k})`);
+      ctx.strokeStyle=g;ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(s.x-s.vx*.16,s.y-s.vy*.16);ctx.lineTo(s.x,s.y);ctx.stroke();
+      ctx.beginPath();ctx.arc(s.x,s.y,1.8,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${k})`;ctx.fill();
+    }
+  }
+  function loop(t){raf=0;if(reduced||document.hidden)return;const dt=last?Math.min((t-last)/1000,.04):0;last=t;elapsed+=dt;paint(t,dt);raf=requestAnimationFrame(loop)}
+  function start(){cancelAnimationFrame(raf);raf=0;last=0;if(!reduced&&!document.hidden)raf=requestAnimationFrame(loop)}
+  addEventListener('resize',resize);document.addEventListener('visibilitychange',start);resize();start();
+
+  // This is a playful client-side Easter egg, not real authentication or a security boundary.
+  const auth=$('auth-overlay'),terminal=$('terminal-overlay'),form=$('auth-form');
+  const USER="q^-^'p/",PASS='bami';
+  function show(el){el.classList.add('show');setTimeout(()=>el.querySelector('input,button')?.focus(),60)}
+  function hide(el){el.classList.remove('show')}
+  $('egg-trigger').addEventListener('click',()=>{show(auth);$('auth-error').textContent='';});
+  document.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',()=>hide(auth)));
+  $('terminal-close').addEventListener('click',()=>hide(terminal));
+  [auth,terminal].forEach(el=>el.addEventListener('click',e=>{if(e.target===el)hide(el)}));
+  addEventListener('keydown',e=>{if(e.key==='Escape'){hide(auth);hide(terminal)}});
+
+  form.addEventListener('submit',e=>{
+    e.preventDefault();
+    const u=$('agent-user').value,p=$('agent-pass').value;
+    if(u===USER&&p===PASS){
+      hide(auth);$('auth-error').textContent='';form.reset();show(terminal);bootTerminal();
+    }else{
+      $('auth-error').textContent='ACCESS DENIED // UNKNOWN AGENT. TRY AGAIN.';
+      $('agent-pass').value='';$('agent-pass').focus();
+    }
+  });
+
+  const output=$('terminal-output'),input=$('command-input');
+  let history=[],historyIndex=0,booted=false,busy=false;
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  function line(text='',cls=''){const el=document.createElement('div');el.className='term-line '+cls;el.textContent=text;output.append(el);output.scrollTop=output.scrollHeight;return el}
+  async function typeLine(text,cls='',speed=13){
+    const el=line('',cls);
+    for(let i=0;i<text.length;i++){el.textContent+=text[i];output.scrollTop=output.scrollHeight;if(!reduced)await sleep(speed)}
+  }
+  async function bootTerminal(){
+    if(booted)return;booted=true;busy=true;
+    await typeLine('SECURE CHANNEL ESTABLISHED // WELCOME BACK, OPERATOR','term-green',8);
+    await typeLine('operator@supahotbami: ~','term-cyan',8);
+    await typeLine("Type 'help' to inspect available commands. All systems are local.",'term-muted',5);
+    line('','');busy=false;input.focus();
+  }
+  function coloredLines(lines){
+    lines.forEach(([text,cls])=>line(text,cls));
+  }
+  const commands={
+    help:()=>coloredLines([
+      ['AVAILABLE COMMANDS','term-cyan'],
+      ['help                 show this command index','term-muted'],
+      ['whoami               identify the operator','term-muted'],
+      ['cat interests.txt    read operator interests','term-muted'],
+      ['open ./projects      open the public repository index','term-muted'],
+      ['ls                   list known files','term-muted'],
+      ['pwd                  print current directory','term-muted'],
+      ['neofetch             display system profile','term-muted'],
+      ['matrix               enter the green stream','term-muted'],
+      ['coffee               request operator fuel','term-muted'],
+      ['sudo                 ask nicely','term-muted'],
+      ['clear                clear terminal output','term-muted'],
+      ['exit                 close the shell','term-muted']
+    ]),
+    whoami:()=>coloredLines([['SupaHotMoj0 / SupaHotBami','term-green']]),
+    'cat interests.txt':()=>coloredLines([
+      ['android / apk forensics','term-cyan'],
+      ['home automation / embedded','term-purple'],
+      ['open source / experiments','term-green']
+    ]),
+    'open ./projects':()=>coloredLines([
+      ['Public repository index ready','term-green'],
+      ['READ THE SOURCE. QUESTION THE DEFAULTS.','term-cyan'],
+      ['https://github.com/SupaHotMoj0?tab=repositories','term-muted']
+    ]),
+    ls:()=>coloredLines([['interests.txt    projects/    secrets/    .motivation','term-cyan']]),
+    pwd:()=>coloredLines([['/home/operator/observatory','term-purple']]),
+    neofetch:()=>coloredLines([
+      ['       .---.       operator@supahotbami','term-cyan'],
+      ['      /     \\\\      --------------------','term-cyan'],
+      ['      |  ◈  |      OS: Digital Universe','term-purple'],
+      ['      \\\\_____/      Shell: ghost-shell 1.0','term-purple'],
+      ['                    Status: curious','term-green'],
+      ['                    Uptime: always building','term-green']
+    ]),
+    matrix:async()=>{for(let i=0;i<5;i++){line(Array.from({length:34},()=>Math.random()<.5?'0':'1').join(' '),'term-green');if(!reduced)await sleep(100)}line('THE CODE IS A MIRROR. HELLO, OPERATOR.','term-cyan')},
+    coffee:()=>coloredLines([['Brewing virtual espresso...','term-gold'],['[██████████] 100%','term-green'],['Caffeine levels restored. Ship it. ☕','term-gold']]),
+    sudo:()=>coloredLines([['Permission politely declined.','term-pink'],['Have you tried being root?','term-purple']]),
+    'sudo make me a sandwich':()=>coloredLines([['🥪 Sandwich.exe compiled successfully.','term-gold'],['Enjoy, operator.','term-green']]),
+    '42':()=>coloredLines([['The answer is 42. The question is still compiling.','term-purple']]),
+    'cat .motivation':()=>coloredLines([['READ THE SOURCE. QUESTION THE DEFAULTS.','term-green'],['MAKE SOMETHING WONDERFUL.','term-cyan']]),
+    'cat secrets/':()=>coloredLines([['Nice try, agent. Some mysteries are better explored.','term-pink'],['Hint: there are more things to discover.','term-purple']])
+  };
+  async function runCommand(raw){
+    const cmd=raw.trim();if(!cmd)return;
+    line('operator@supahotbami:~ ❯ '+cmd,'term-cyan');
+    if(cmd==='clear'){output.replaceChildren();return}
+    if(cmd==='exit'){line('Closing secure shell. Stay curious, operator.','term-purple');await sleep(450);hide(terminal);return}
+    const action=commands[cmd.toLowerCase()];
+    if(action){await action();return}
+    if(cmd.toLowerCase().startsWith('open ')){
+      const target=cmd.slice(5).trim();
+      if(target==='https://github.com/SupaHotMoj0'||target==='github'){
+        line('Opening the public repository index in a new tab...','term-green');
+        window.open('https://github.com/SupaHotMoj0?tab=repositories','_blank','noopener,noreferrer');return;
+      }
+      line(`Cannot resolve "${target}". Try: open ./projects`,'term-pink');return;
+    }
+    if(cmd.toLowerCase().startsWith('cat ')){
+      line(`File not found: ${cmd.slice(4)}. Try: cat interests.txt`,'term-pink');return;
+    }
+    if(cmd.toLowerCase()==='hello'||cmd.toLowerCase()==='hello world'){
+      coloredLines([['HELLO, OPERATOR.','term-cyan'],['The universe says hi back. ✦','term-purple']]);return;
+    }
+    line(`command not found: ${cmd}. Type 'help' for available commands.`,'term-pink');
+  }
+  $('command-form').addEventListener('submit',async e=>{
+    e.preventDefault();if(busy)return;
+    const cmd=input.value;input.value='';history.push(cmd);historyIndex=history.length;busy=true;
+    await runCommand(cmd);busy=false;if(terminal.classList.contains('show'))input.focus();
+  });
+  input.addEventListener('keydown',e=>{
+    if(e.key==='ArrowUp'){e.preventDefault();if(historyIndex>0)historyIndex--;input.value=history[historyIndex]||''}
+    if(e.key==='ArrowDown'){e.preventDefault();if(historyIndex<history.length)historyIndex++;input.value=history[historyIndex]||''}
+  });
+  terminal.addEventListener('click',e=>{if(e.target===terminal)hide(terminal)});
+})();
 </script>
-</body></html>
+</body>
+</html>'''
+
+path = Path("/mnt/data/404.html")
+path.write_text(html, encoding="utf-8")
+print(f"Created {path} ({path.stat().st_size:,} bytes)")
