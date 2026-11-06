@@ -1,42 +1,57 @@
 # SUPAHOTBAMI // Developer Observatory
 
-Static GitHub Pages portfolio for https://git.supahotbami.nl. No build step, third-party JavaScript libraries, remote fonts, tracking scripts or backend shell.
+Static portfolio for https://git.supahotbami.nl. No build step, external JavaScript libraries, remote fonts, analytics, backend shell, or account tokens.
 
-## Audit baseline
-Reviewed main at 1ad11cc2da42c900d80cc72c5221ee71f368a91a.
-- index.html: 20,263 bytes; inline CSS and JavaScript, canvas starfield, static terminal introduction, live public repository browser with cache/fallback.
-- 404.html: 4,427 bytes; custom error page, radial gradient and gentle 404 drift; no canvas/starfield.
-- CNAME: 19 bytes, git.supahotbami.nl; preserved unchanged.
-- .nojekyll: empty; preserved unchanged.
-- README.md: empty before this update.
-No separate CSS/JS files, image assets, framework or build workflow existed in that snapshot. The uploaded screenshots were not used as a source of precise code or deployment state.
+## Bami Habitat
 
-## Updated structure
-- index.html: existing identity, biography and project explorer, plus terminal and original inline SVG cat.
-- 404.html: preserved error message/home links and noindex; shared sky effect. Root-relative assets work for nested missing paths on this custom-domain/user site.
-- assets/site.css: responsive neon presentation, console, cat and reduced-motion rules.
-- assets/space.js: shared projected-depth canvas sky, motion settings, occasional clickable comet, warp, cat and dock chase.
-- assets/repos.js: public GitHub repository index, pagination, search, filters, sorting and cache/fallback.
-- assets/terminal.js: whitelisted simulated commands, history, drag/minimize/restore and Easter eggs.
+An original, opt-in web pet with original inline vector art. Inspired by the desktop-pet genre and [adryd325/oneko.js](https://github.com/adryd325/oneko.js), not a copy of its code or sprite sheet. The habitat implementation (`assets/pet.js` and `assets/pet.css`) is MIT licensed; see `LICENSE-HABITAT`.
 
-## Play
-Unlock word: bami. It is intentionally public, not authentication. Commands: help, whoami, cat interests.txt, projects, repos, github, date, clear, stars pause, stars resume, warp, comet, cat, secret, open sesame, minimize. No eval, remote execution or arbitrary command URLs. Console input/history stays in memory and is not sent to a server.
-Drag the title bar with a mouse or touch; focus it and use arrow keys (Shift = larger steps); Escape or the reset button returns it to its layout. Minimize to the draggable restore icon; the cat chases it and catches it. Activate that icon or Alt+Backquote to restore. Pet the cat or approach it with a mouse. Catch a comet or run secret to toggle the hidden palette. These are cosmetic, not security features.
+- Tap/click the tiny floating Earth to reveal its miniature house and wake the black cat. The cat does not roam before activation and activation is not persisted across page loads.
+- Tap/click the cat to pet it. Neon eyes change with curiosity, alertness, contentment and sleep; visual purring happens during play and at occasional idle intervals.
+- Tap/click the house to call it home. It navigates back and goes inside; the planet remains available to wake it again.
+- Hold the cat, Earth, or house for 650 ms to reveal the ancient habitat controls. Dragging beyond 12 px cancels the hold. Mouse right-click and keyboard Shift+F10 also open them.
+- Keyboard: focus a habitat control, then hold Tab for 700 ms. Normal short Tab presses still move focus normally. Enter/Space activates the Earth or house. Escape closes the panel; arrows/Home/End navigate its actions.
+- The hidden panel provides pet/purr, follow, explore, return home, pause pet, optional sound, page-top and projects actions. It is non-modal: normal keyboard navigation is never trapped.
+- Audio defaults to off. Enabling sound permits a quiet synthesized purr only, not a downloaded recording or autoplay soundtrack. Mute stops active sound nodes; hidden tabs and motion pause stop sound too.
+- The pet samples visible heading/text rectangles and frame edges, chooses perches, and uses a bounded A* lattice to steer around content. This is a small whimsical navigator, not a complete DOM physics engine. It never clicks links, types into forms, steals page selection or invokes commands on its own.
+- No pet data is transmitted. Only explicit page navigation or the site's existing public GitHub fetches use the network.
 
-## Motion, data and privacy
-System reduced motion overrides animated features. The pause button controls the shared sky and decorative CSS motion. Background tabs stop the animation loop. Canvas uses at most 160 stars, DPR capped at 1.5 and approximately 30 animation frames per second. Browser performance is device-dependent.
-Local storage contains the motion preference and a 15-minute public repository cache. Command history is memory-only, bounded to 50 entries; console output is bounded to about 80 blocks. Browsers contact api.github.com for public data; links to GitHub are explicit HTTPS links. No tokens, private repository metadata or credentials belong in frontend code.
-Forks/archives are labeled and not silently omitted. Non-fork is not proof of authorship. If the API fails, a clearly marked stale cache or the supplied 18-name starter list remains visible; starter entries are not guaranteed current/public. Cache records are validated and output is inserted as text. GitHub rate limits still apply; pagination has a 100-page safety cap.
+## Carrier terminal
 
-## Deployment checks (not automatically changed)
-GitHub Settings > Pages: main, /(root), custom domain git.supahotbami.nl; enable Enforce HTTPS when the certificate is ready. Keep domain-verification TXT records.
-Cloudflare DNS: git CNAME supahotmoj0.github.io (no protocol/repository path). DNS-only is the simplest direct setup; Cloudflare does not proxy/cache HTTP traffic in that mode. If deliberately enabling the proxy after origin HTTPS works, use Full (strict) with a valid hostname-matching origin certificate. Avoid Flexible. Do not automatically enable Rocket Loader, alter zone-wide redirects or change cache rules without testing. No Cloudflare or Pages setting is changed by this commit.
+The old public unlock-word form and decorative duplicate controls have been removed. There is now a local discovery trail involving the repository explorer and the custom 404 page. It is a public, client-side game, **not authentication or hidden server access**. No walkthrough is printed in the interface or this README.
 
-## Test checklist
-Serve the repository root with python3 -m http.server 8080. Test at widths 360/768/1440, keyboard-only navigation, touch drag, terminal unlock/help/history, minimize/cat chase/restore, draggable dock, window resize, reduced motion, pause/resume, tab hide/show, comet and warp. Test API success, offline mode, rate-limit errors, malformed/blocked local storage and starter fallback. On the deployed site, test a nested nonexistent path and asset loading, response status 404, custom-domain redirects and HTTPS. The live domain could not be retrieved during the audit; this is not proof of an outage or a certificate error.
+The terminal supports staged colors on near-black glass, slow grapheme/word output with varied timing, individually settling units, command history and Ctrl+C interruption. User input and ordinary help are green. A separate live-region transcript announces completed lines instead of every character. The three top-left controls really close, minimize to a taskbar, and maximize/restore. Drag or keyboard-move the titlebar; Escape minimizes; Alt+Backquote restores only after discovery.
 
-Documentation:
-https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https
-https://developers.cloudflare.com/dns/proxy-status/
-https://developers.cloudflare.com/ssl/origin-configuration/ssl-modes/full-strict/
-https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture
+`Nullify.Bami`, displayed in the terminal footer, resets the campaign, its discovery flags, terminal transcript and in-memory history, palette effects and pet activity. Storage events synchronize campaign progress/reset between tabs. It does not delete unrelated local-storage data, motion preferences, or public repository caches.
+
+The slight BAMI_ glitch and CRT effects are decorative. The page motion control and system reduced-motion preference override decorative animation; reduced motion also changes terminal output to immediate text. The independently paused pet does not pause the rest of the site. Background tabs stop animation loops. Pet and sky loops are capped around 30 fps; real performance depends on device/browser.
+
+## Files
+
+- `index.html`, `404.html`: original identity, content and profile links, shared terminal/habitat assets; 404 retains `noindex`.
+- `assets/site.css`: baseline responsive site layout.
+- `assets/experience.css`: restrained logo interference, carrier UI and discovery card.
+- `assets/cipher.js`: bounded versioned campaign state and repository artifact.
+- `assets/terminal.js`: whitelisted local simulation, queue, controls and history.
+- `assets/pet.js`, `assets/pet.css`: reusable original planet/house/cat habitat.
+- `assets/space.js`: shared depth-projected sky, motion controls, comet and warp.
+- `assets/repos.js`: public repository browser with pagination, cache and marked fallback.
+- `assets/favicon.svg`: site icon.
+
+Assets use a version query for cache refresh. Root-relative paths support nested missing URLs on this custom-domain/user Pages site. CNAME and `.nojekyll` are preserved unchanged.
+
+## Data and privacy
+
+Local storage contains the motion preference, a 15-minute public GitHub repository cache, and validated campaign flags (`sb-q-campaign-v3`). Terminal commands/history remain memory-only. Repository API failures use a clearly labeled cache or starter index; starter entries are not live metrics. Forks/archives are labeled, and non-fork is not proof of authorship. The legendary card's playful statistics are labeled **local fiction / not GitHub statistics**.
+
+Output is inserted as text, never evaluated as HTML or JavaScript. No arbitrary URLs or shell commands are executed. Browser requests to `api.github.com` retrieve public repository data; GitHub links are explicit HTTPS links. Do not put secrets or account tokens in these frontend files.
+
+## Local checks
+
+Serve the root with `python3 -m http.server 8080`. The Playwright script in `tests/browser-checks.py` runs against `BAMI_BASE_URL` (defaults to `http://127.0.0.1:8080`). Install Playwright and its Chromium browser in a separate developer environment. It stubs public repository data for deterministic checks and writes evidence only if `BAMI_EVIDENCE_DIR` is set. It is not a Pages build dependency.
+
+Coverage includes opt-in behavior, planet/house controls, long press, ordinary Tab and held Tab, right-click/Shift+F10, mobile taps, purr feedback, no automatic audio, return-home, text safety, campaign persistence/reset, phased output, taskbar and maximize, bounded transcript/history, blocked storage, API fallback and reduced motion. Physical devices, assistive technologies, origin HTTPS/DNS and Pages deployments still require live verification.
+
+## Deployment
+
+Pages: `main`, `/(root)`, custom domain `git.supahotbami.nl`. Enable Enforce HTTPS once the certificate is ready. Preserve domain-verification TXT records. Cloudflare DNS should point `git` to `supahotmoj0.github.io`, not to a protocol or repository path. DNS-only is the simplest direct setup. If intentionally proxying, use Full (strict) after the origin certificate works; avoid Flexible. This code change does not modify GitHub Pages settings, DNS or Cloudflare configuration.
