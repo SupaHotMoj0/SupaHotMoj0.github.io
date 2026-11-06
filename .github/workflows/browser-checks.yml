@@ -1,0 +1,59 @@
+name: Browser regression checks
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Enhanced is a strict future-feature contract, not a feature detector
+        type: choice
+        options: [legacy, enhanced]
+        default: legacy
+permissions:
+  contents: read
+concurrency:
+  group: browser-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  chromium:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install playwright
+          python -m playwright install --with-deps chromium
+          python -m pip freeze
+      - name: Check Python syntax
+        run: python -m py_compile tests/browser-checks.py tests/serve.py
+      - name: Serve real repository pages and run tests
+        env:
+          BAMI_PROFILE: ${{ inputs.profile || 'legacy' }}
+          BAMI_BASE_URL: http://127.0.0.1:8080
+          BAMI_EVIDENCE_DIR: test-results
+        run: |
+          python tests/serve.py > /tmp/bami-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" || true' EXIT
+          for i in $(seq 1 40); do
+            curl --fail --silent http://127.0.0.1:8080/ > /dev/null && break
+            sleep 0.25
+          done
+          curl --fail --silent http://127.0.0.1:8080/ > /dev/null
+          python tests/browser-checks.py
+      - name: Preserve report, screenshots and server log
+        if: always()
+        run: |
+          mkdir -p test-results
+          cp /tmp/bami-http.log test-results/server.log 2>/dev/null || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-checks
+          path: test-results/
+          if-no-files-found: warn
